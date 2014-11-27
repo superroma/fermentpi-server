@@ -1,0 +1,23 @@
+{
+  "name": "ControllerStatus",
+  "base": "Model",
+  "properties": {
+    "ControllerName": {
+      "type": "string",
+      "required": true
+    },
+    "Sensors": {
+      "type": [
+        {
+            "Address": { "type":"string"},
+            "SetValue": {"type":"number"},
+            "CurrentValue": {"type":"number"}
+        }
+      ]
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}

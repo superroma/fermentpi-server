@@ -1,0 +1,27 @@
+{
+  "name": "Controller",
+  "plural": "Controllers",
+  "base": "PersistedModel",
+  "properties": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "LastIP": {
+      "type": "string"
+    },
+    "Hardware": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "Fermenters": {
+      "type": "hasMany",
+      "model": "Fermenter",
+      "foreignKey": "ControllerID"
+    }
+  },
+  "acls": [],
+  "methods": []
+}

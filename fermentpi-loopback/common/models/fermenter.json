@@ -1,0 +1,32 @@
+{
+  "name": "Fermenter",
+  "plural": "Fermenters",
+  "base": "PersistedModel",
+  "properties": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "OneWireAddress": {
+      "type": "string"
+    },
+    "TempSetting": {
+      "type": "number"
+    },
+    "LastTemp": {
+      "type": "number"
+    },
+    "LastDate": {
+      "type": "date"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "Controller": {
+      "type": "belongsTo",
+      "model": "Controller"
+    }
+  },
+  "acls": [],
+  "methods": []
+}
