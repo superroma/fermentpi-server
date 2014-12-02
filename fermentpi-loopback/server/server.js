@@ -1,6 +1,6 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
-
+debugger;
 var app = module.exports = loopback();
 
 // Set up the /favicon.ico
