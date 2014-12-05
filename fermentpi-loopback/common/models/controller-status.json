@@ -9,9 +9,15 @@
     "Sensors": {
       "type": [
         {
-            "Address": { "type":"string"},
-            "SetValue": {"type":"number"},
-            "CurrentValue": {"type":"number"}
+          "Address": {
+            "type": "string"
+          },
+          "SetValue": {
+            "type": "number"
+          },
+          "CurrentValue": {
+            "type": "number"
+          }
         }
       ]
     }

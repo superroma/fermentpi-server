@@ -1,0 +1,19 @@
+{
+  "name": "TempReading",
+  "plural": "TempReadings",
+  "base": "PersistedModel",
+  "properties": {
+    "When": {
+      "type": "date",
+      "required": true
+    },
+    "Value": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}

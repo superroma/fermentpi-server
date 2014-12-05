@@ -18,8 +18,7 @@
   "relations": {
     "Fermenters": {
       "type": "hasMany",
-      "model": "Fermenter",
-      "foreignKey": "ControllerID"
+      "model": "Fermenter"
     }
   },
   "acls": [],

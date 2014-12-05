@@ -1,22 +1,15 @@
 module.exports = function(Controller) {
-
-    Controller.report = function(controllerStatus, cb) {
+    Controller.report = function(controllerStatus, req, cb) {
         if(!controllerStatus){
             err = "no controllerStatus or bad format";
             cb(err);
             return;
         }
-        debugger;
         var stepup = require('stepup');
         var app = require('../../server/server');
         var Fermenter = app.models.Fermenter;
-
-        function updateSensor(sensor, fermenter, callback) {
-            if(fermenter.OneWireAddress === sensor.Address && fermenter.TempSetting) {
-                sensor.SetValue = fermenter.TempSetting;
-            }
-            callback(null);
-        }
+        var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        
         stepup([
             function findOrCreateController(context) {
                 console.log("incoming report. controllerStatus:", controllerStatus);
@@ -27,27 +20,36 @@ module.exports = function(Controller) {
                     context.first()
                 );
             },
+            function updateController(context, controller) {
+                controller.LastIP = ip;
+                controller.save(context.first());
+            },
             function findOrCreateFermeneters(context, controller) {
                 console.log("2. found: ",controller);
-                var group = context.group('first');
-                controllerStatus.Sensors.forEach(function(sensor) {
-                    console.log("2.1 sensor:", sensor);
-                    Fermenter.findOrCreate(
-                        {where: {ControllerID: controller.id, OneWireAddress: sensor.Address}},
-                        {ControllerID: controller.id, OneWireAddress: sensor.Address, Name: sensor.Address}, 
-                        group()
-                    );
-                });
-            },
-            function updateSensors(context, fermenters) {
-                console.log("3. found fermenters:", fermenters.length);
-                var group = context.group();
-                fermenters.forEach(function(fermenter) {
+                var allDone = context.group();
+                if(controllerStatus.Sensors) {
                     controllerStatus.Sensors.forEach(function(sensor) {
-                        console.log("updating "+ sensor.Address, fermenter.Name);
-                        updateSensor(sensor, fermenter, group());
-                    });                                                     
-                });
+                        console.log("2.1 sensor:", sensor);
+                        context.run([
+                            function ensureFermenter(context1) {
+                                context1.data.sensor = sensor;
+                                Fermenter.findOrCreate(
+                                    {where: {ControllerID: controller.id, OneWireAddress: sensor.Address}},
+                                    {ControllerID: controller.id, OneWireAddress: sensor.Address, Name: sensor.Address}, 
+                                    context1.first()
+                                );
+                            },
+                            function processFermenter(context1, fermenter) {
+                                if(fermenter.TempSetting) {
+                                    context1.data.sensor.SetValue = fermenter.TempSetting;
+                                }
+                                fermenter.LastTemp = context1.data.sensor.CurrentValue;
+                                fermenter.LastDate = new Date();
+                                fermenter.save(context1.first());
+                            }
+                        ], allDone());
+                    });
+                }
             },
             function done(context) {
                 console.log("reply. controllerStatus:", controllerStatus);
@@ -58,7 +60,7 @@ module.exports = function(Controller) {
 
     Controller.remoteMethod(
         'report', {
-            accepts: {arg:'controllerStatus', type:'ControllerStatus'},
+            accepts: [{arg:'controllerStatus', type:'ControllerStatus'}, {arg:'req', type:'object', http: {source:'req'} }],
             returns: {arg:'controllerStatus', type:'ControllerStatus'}
         }
     );

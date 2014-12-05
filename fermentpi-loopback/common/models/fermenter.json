@@ -25,7 +25,11 @@
     "Controller": {
       "type": "belongsTo",
       "model": "Controller"
-    }
+    },
+    "TempReadings":{
+        "type": "hasMany",
+        "model": "TempReading"
+    }    
   },
   "acls": [],
   "methods": []
