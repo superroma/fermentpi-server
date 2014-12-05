@@ -22,10 +22,6 @@
   },
   "validations": [],
   "relations": {
-    "Controller": {
-      "type": "belongsTo",
-      "model": "Controller"
-    },
     "TempReadings":{
         "type": "hasMany",
         "model": "TempReading"

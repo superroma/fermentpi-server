@@ -13,7 +13,6 @@ module.exports = function(Controller) {
         stepup([
             function findOrCreateController(context) {
                 console.log("incoming report. controllerStatus:", controllerStatus);
-                console.log("1. finding-controller:"+controllerStatus.ControllerName);
                 Controller.findOrCreate(
                     {where: {Name: controllerStatus.ControllerName}},
                     {Name: controllerStatus.ControllerName},
@@ -25,17 +24,15 @@ module.exports = function(Controller) {
                 controller.save(context.first());
             },
             function findOrCreateFermeneters(context, controller) {
-                console.log("2. found: ",controller);
                 var allDone = context.group();
                 if(controllerStatus.Sensors) {
                     controllerStatus.Sensors.forEach(function(sensor) {
-                        console.log("2.1 sensor:", sensor);
                         context.run([
                             function ensureFermenter(context1) {
                                 context1.data.sensor = sensor;
                                 Fermenter.findOrCreate(
-                                    {where: {ControllerID: controller.id, OneWireAddress: sensor.Address}},
-                                    {ControllerID: controller.id, OneWireAddress: sensor.Address, Name: sensor.Address}, 
+                                    {where: {controllerId: controller.id, OneWireAddress: sensor.Address}},
+                                    {controllerId: controller.id, OneWireAddress: sensor.Address, Name: sensor.Address}, 
                                     context1.first()
                                 );
                             },
@@ -65,4 +62,4 @@ module.exports = function(Controller) {
         }
     );
 };
-//{"ControllerName":"ddddd", "Sensors":[{"Address":"123", "CurrentValue":23}]}
+//{"Sensors": [{"CurrentValue": 22.0, "Address": "0000066d868f"}], "ControllerName": "brewferm1"}
