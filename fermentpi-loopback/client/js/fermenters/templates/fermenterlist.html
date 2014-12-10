@@ -1,0 +1,9 @@
+<h1>Fermenters</h1>
+<hr>
+<div ng-repeat="controller in controllers">
+    {{controller.Name}}&nbsp;
+    <div class="list-group">
+        <a ng-repeat="fermenter in controller.Fermenters" href="#/fermenter/{{fermenter.id}}" class="list-group-item">{{fermenter.Name}}&nbsp;
+   </a>
+    </div>
+</div>

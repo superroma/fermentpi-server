@@ -1,0 +1,29 @@
+<h1>{{fermenter.Name}}</h1>
+Last Temperature: {{fermenter.LastTemp}}
+
+<div dx-chart="{ 
+    series: [{
+               name: 'Fermenter temp',
+               type:'spline', 
+               valueField: 'Value', 
+               argumentField: 'When',
+               point: {visible:false}
+   }
+    ],
+    bindingOptions: { 
+        dataSource: 'tempReadings'
+    },
+    animation: {
+        enabled: false
+    },
+    argumentAxis: { 
+        argumentType: 'datetime',
+        tickInterval: 30,
+        grid: {visible:true, opacity:0.3}
+    },
+    valueAxis: {
+        min:10,
+        tickInterval: 1, 
+        grid: {opacity:0.5}
+    }
+ }"></div>
