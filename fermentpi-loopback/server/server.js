@@ -9,8 +9,9 @@ app.use(loopback.favicon());
 app.use(loopback.compress());
 
 // -- Add your pre-processing middleware here --
-var httpLogger = require('./loghttp');
-app.use(httpLogger);
+
+//var httpLogger = require('./loghttp');
+//app.use(httpLogger);
 // boot scripts mount components like REST API
 boot(app, __dirname);
 
